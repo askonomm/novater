@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="et-EE">
+<head>
+    <meta charset="UTF-8">
+    <title>Reisi Eestis</title>
+</head>
+<body>
+
+    <form method="post" hx-post="/api/search" hx-target="#results" hx-swap="innerHTML">
+        <label for="start">Algus-punkt:</label>
+        <input type="text" name="start" id="start" value="" />
+        <label for="end">Lõpp-punkt:</label>
+        <input type="text" name="end" id="end" value="" />
+        <button type="submit">Otsi</button>
+    </form>
+
+    <div id="results"></div>
+
+    <script src="https://unpkg.com/htmx.org/dist/htmx.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="et-EE">
+<head>
+    <meta charset="UTF-8">
+    <title>Reisi Eestis</title>
+</head>
+<body>
+
+    <h1>Broneering</h1>
+
+    <p>
+        <h2>{{ booking.from_name }} > {{ booking.to_name }}</h2>
+        <strong>{{ booking.first_name }} {{ booking.last_name }}</strong>
+        <hr />
+        {{ booking.start_date }} - {{ booking.end_date }}
+        <br />
+        Bussiliin: {{ booking.operator_name }}
+        <br />
+        Hind: {{ booking.price }}
+
+    </p>
+
+</body>
+</html>

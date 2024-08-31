@@ -1,0 +1,20 @@
+<h2>Tulemused</h2>
+
+{% for route in data['items'] %}
+    <div>
+        <h3>{{ route.from_name }} > {{ route.to_name }} <span>{{ route.distance }}km</span></h3>
+
+        <h4>Graafik</h4>
+        {% for schedule in route.schedule %}
+            <div>
+                <h4>{{ schedule.start_date }} - {{ schedule.end_date }}</h4>
+                <ul>
+                    <li>Bussiliin: {{ schedule.company_state }}</li>
+                    <li>Hind: {{ schedule.price }}</li>
+                </ul>
+
+                <a href="/book/{{ data.dataset_id }}/{{ route.id }}/{{ schedule.id }}">Broneeri</a>
+            </div>
+        {% endfor %}
+    </div>
+{% endfor %}
