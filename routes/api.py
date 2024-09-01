@@ -26,7 +26,7 @@ def search():
     result = fetch_routes(start, end)
 
     # could not find results for our criteria
-    if not result:
+    if not result or len(result['items']) == 0:
         return "Ei leidnud ühtegi tulemust"
 
     # all good, return data
