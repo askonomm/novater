@@ -96,6 +96,7 @@ class Schedule(Base):
 class Booking(Base):
     __tablename__ = "bookings"
     id = Column(Integer, primary_key=True)
+    dataset_id = Column(Integer)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
     from_name = Column(String, nullable=False)

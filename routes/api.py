@@ -58,6 +58,7 @@ def book(dataset_id, route_id, schedule_id):
 
     with Session() as session:
         booking = Booking(
+            dataset_id=dataset_id,
             first_name=first_name,
             last_name=last_name,
             from_name=from_name,
