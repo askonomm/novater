@@ -29,8 +29,25 @@ def search():
     if not result or len(result['items']) == 0:
         return "Ei leidnud ühtegi tulemust"
 
+
+    company_states = set([schedule['company_state'] for route in result['items'] for schedule in route['schedule']])
+
+    # filter by company_state
+    if 'company_state' in data and len(data['company_state']):
+        for index, route in enumerate(result['items']):
+            route['schedule'] = list(filter(lambda x: x['company_state'] == data['company_state'], route['schedule']))
+            result['items'][index] = route
+
+
     # all good, return data
-    return render_template('api/results.html', data=result)
+    return render_template(
+        'api/results.html',
+        data=result,
+        company_states=company_states,
+        selected_company_state=data['company_state'] if 'company_state' in data and len(data['company_state']) else None,
+        start=start,
+        end=end
+    )
 
 
 @api.post('/book/<int:dataset_id>/<int:route_id>/<int:schedule_id>')

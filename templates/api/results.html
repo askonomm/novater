@@ -1,5 +1,21 @@
 <h2>Tulemused</h2>
 
+<form method="post" hx-trigger="change" hx-post="/api/search" hx-target="#results" hx-swap="innerHTML">
+    <input type="hidden" name="start" id="start" value="{{ start }}" />
+    <input type="hidden" name="end" id="end" value="{{ end }}" />
+
+    <label for="company_state">Bussiliin:</label>
+    <select name="company_state" id="company_state">
+        <option value="">Kõik</option>
+
+        {% for company_state in company_states %}
+            <option value="{{ company_state }}" {% if selected_company_state == company_state %} selected {% endif %}>
+                {{ company_state }}
+            </option>
+        {% endfor %}
+    </select>
+</form>
+
 {% for route in data['items'] %}
     <div>
         <h3>{{ route.from_name }} > {{ route.to_name }} <span>{{ route.distance }}km</span></h3>
