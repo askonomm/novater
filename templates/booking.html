@@ -20,5 +20,9 @@
 
     </p>
 
+    {% if can_cancel %}
+        <a href="/booking/{{ booking.id }}/cancel">Tühista broneering</a>
+    {% endif %}
+
 </body>
 </html>
