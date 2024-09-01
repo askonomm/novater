@@ -1,7 +1,9 @@
+import hashlib
+from requests import JSONDecodeError
 from sqlalchemy.orm import joinedload
 from db import Dataset, Route, Schedule, Session
 from domain.utils import get_current_time_in_tz
-
+import requests
 
 def ensure_only_last_15_datasets(session):
     # fetch all datasets
@@ -17,81 +19,13 @@ def ensure_only_last_15_datasets(session):
 
 def fetch_fresh_dataset():
     # fetch data from the API
-    # we will just return some dummy data for now
-    data = {
-        'id': '4b5658be-0cf3-414e-8a99-78d5d82a9dc1',
-        'expires': {
-            'date': '2024-08-31 23:59:59.000000',
-            'timezone_type': 2,
-            'timezone': 'Z'
-        },
-        'routes': [
-            {
-                'id': '4b5658be-0cf3-414e-8a99-78d5d82a9dc2',
-                'from': {
-                    'id': '4b5658be-0cf3-414e-8a99-78d5d82a9dc3',
-                    'name': 'London'
-                },
-                'to': {
-                    'id': '4b5658be-0cf3-414e-8a99-78d5d82a9dc4',
-                    'name': 'Paris'
-                },
-                'distance': 350,
-                'schedule': [
-                    {
-                        'id': '4b5658be-0cf3-414e-8a99-78d5d82a9dc6',
-                        'price': 50,
-                        'start': {
-                            'date': '2024-08-31 08:00:00.000000',
-                            'timezone_type': 3,
-                            'timezone': 'Europe/Tallinn'
-                        },
-                        'end': {
-                            'date': '2024-08-31 10:00:00.000000',
-                            'timezone_type': 3,
-                            'timezone': 'Europe/Tallinn'
-                        },
-                        'company': {
-                            'id': '4b5658be-0cf3-414e-8a99-78d5d82a9dc9',
-                            'state': 'NoBus'
-                        }
-                    }
-                ]
-            },
-            {
-                'id': '4b5258be-0cf3-414e-8a99-78d5d82a9dc2',
-                'from': {
-                    'id': '4b5654e-0cf3-414e-8a99-78d5d82a9dc3',
-                    'name': 'Paris'
-                },
-                'to': {
-                    'id': '4b5658b6-0cf3-414e-8a99-78d5d82a9dc4',
-                    'name': 'London'
-                },
-                'distance': 350,
-                'schedule': [
-                    {
-                        'id': '4b5659e-0cf3-414e-8a99-78d5d82a9dc6',
-                        'price': 50,
-                        'start': {
-                            'date': '2024-08-31 08:00:00.000000',
-                            'timezone_type': 3,
-                            'timezone': 'Europe/Tallinn'
-                        },
-                        'end': {
-                            'date': '2024-08-31 10:00:00.000000',
-                            'timezone_type': 3,
-                            'timezone': 'Europe/Tallinn'
-                        },
-                        'company': {
-                            'id': '4b5658b3cf3-414e-8a99-78d5d82a9dc9',
-                            'state': 'NoBus'
-                        }
-                    }
-                ]
-            }
-        ]
-    }
+    api_endpoint = 'https://assignments.novater.com/v1/bus/schedule'
+    request = requests.get(api_endpoint, auth=('asko', hashlib.md5('asko'.encode()).hexdigest()))
+
+    try:
+        data = request.json()
+    except JSONDecodeError:
+        data = None
 
     # no data available
     if not data:
@@ -103,7 +37,6 @@ def fetch_fresh_dataset():
         return None
 
     # create a new dataset
-    # valid until, and take timezone in data['expires']['timezone'], and type in data['expires']['timezone_type'] into account
     with Session() as session:
         dataset = Dataset(
             expires_date=data['expires']['date'],
