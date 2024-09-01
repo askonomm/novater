@@ -4,16 +4,27 @@
     <input type="hidden" name="start" id="start" value="{{ start }}" />
     <input type="hidden" name="end" id="end" value="{{ end }}" />
 
-    <label for="company_state">Bussiliin:</label>
-    <select name="company_state" id="company_state">
-        <option value="">Kõik</option>
+    <fieldset>
+        <legend>Filtrid</legend>
+        <label for="company_state">Bussiliin:</label>
+        <select name="company_state" id="company_state">
+            <option value="">Kõik</option>
 
-        {% for company_state in company_states %}
-            <option value="{{ company_state }}" {% if selected_company_state == company_state %} selected {% endif %}>
-                {{ company_state }}
-            </option>
-        {% endfor %}
-    </select>
+            {% for company_state in company_states %}
+                <option value="{{ company_state }}" {% if selected_company_state == company_state %} selected {% endif %}>
+                    {{ company_state }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <br />
+
+        <label for="price">Hind:</label>
+        (Min {{ lowest_price }}
+        <input type="range" name="price" id="price" min="{{ lowest_price }}" max="{{ highest_price }}" value="{{ price }}" />
+        {{ highest_price }} Max)
+
+    </fieldset>
 </form>
 
 {% for route in data['items'] %}

@@ -29,15 +29,24 @@ def search():
     if not result or len(result['items']) == 0:
         return "Ei leidnud ühtegi tulemust"
 
-
+    # filter by company_state
     company_states = set([schedule['company_state'] for route in result['items'] for schedule in route['schedule']])
 
-    # filter by company_state
     if 'company_state' in data and len(data['company_state']):
         for index, route in enumerate(result['items']):
             route['schedule'] = list(filter(lambda x: x['company_state'] == data['company_state'], route['schedule']))
             result['items'][index] = route
 
+    # filter by price
+    prices = [schedule['price'] for route in result['items'] for schedule in route['schedule']]
+    lowest_price = min(prices) if len(prices) else None
+    highest_price = max(prices) if len(prices) else None
+    price = data['price'] if 'price' in data and len(data['price']) else None
+
+    if price:
+        for index, route in enumerate(result['items']):
+            route['schedule'] = list(filter(lambda x: x['price'] >= float(price), route['schedule']))
+            result['items'][index] = route
 
     # all good, return data
     return render_template(
@@ -46,7 +55,10 @@ def search():
         company_states=company_states,
         selected_company_state=data['company_state'] if 'company_state' in data and len(data['company_state']) else None,
         start=start,
-        end=end
+        end=end,
+        price=price,
+        lowest_price=lowest_price,
+        highest_price=highest_price
     )
 
 
