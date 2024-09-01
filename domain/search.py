@@ -97,6 +97,11 @@ def fetch_fresh_dataset():
     if not data:
         return None
 
+    # if the data we get is expired, we should not save it
+    current_time = get_current_time_in_tz(data['expires']['timezone'], data['expires']['timezone_type'])
+    if current_time.strftime('%Y-%m-%d %H:%M:%S') > data['expires']['date']:
+        return None
+
     # create a new dataset
     # valid until, and take timezone in data['expires']['timezone'], and type in data['expires']['timezone_type'] into account
     with Session() as session:
